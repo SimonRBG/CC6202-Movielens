@@ -30,6 +30,38 @@ public class DBParser {
 	private ArrayList <Rate> ratings;
 	private ArrayList <MetaTag> metaTags;
 	
+	public HashMap<Integer, String> getMovies() {
+		return movies;
+	}
+
+	public HashMap<Integer, String> getMoviesGenre() {
+		return moviesGenre;
+	}
+
+	public HashMap<Integer, Integer> getImdbId() {
+		return imdbId;
+	}
+
+	public HashMap<Integer, Integer> getWikidataId() {
+		return wikidataId;
+	}
+
+	public HashMap<Integer, String> getTags() {
+		return tags;
+	}
+
+	public HashMap<CoupleMovieTag, Double> getScores() {
+		return scores;
+	}
+
+	public ArrayList<Rate> getRatings() {
+		return ratings;
+	}
+
+	public ArrayList<MetaTag> getMetaTags() {
+		return metaTags;
+	}
+
 	public DBParser() {
 		movies = new HashMap<Integer, String>();
 		moviesGenre = new HashMap<Integer, String>();
@@ -152,19 +184,19 @@ public class DBParser {
         
     }
     
-    public static void main(String args[]){
+  /*  public static void main(String args[]){
     	DBParser dbp = new DBParser();
     	try {
 			//dbp.parseMovies();
 			//dbp.parseLinks();
 			//dbp.parseTags();
 			/** TODO : Optimize because demand more than 1G of bytes
-			//dbp.parseScores();
-    		//dbp.parseRates(); **/
-    		dbp.parseMetaTags();
+			//dbp.parseScores(); **/
+    		//dbp.parseRates(); */
+    /*		dbp.parseMetaTags();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    }
+    } */
 }
