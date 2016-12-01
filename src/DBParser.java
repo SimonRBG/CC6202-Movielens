@@ -22,6 +22,7 @@ public class DBParser {
 	private final static String METATAGS_FILE_NAME = "tags.csv";
 	private final static String SEPARATOR = ",";
 	private HashMap <Integer, String> movies;
+	private HashMap <Integer, String> moviesGenre;
 	private HashMap <Integer, Integer> imdbId;
 	private HashMap <Integer, Integer> wikidataId;
 	private HashMap <Integer, String> tags;
@@ -31,6 +32,7 @@ public class DBParser {
 	
 	public DBParser() {
 		movies = new HashMap<Integer, String>();
+		moviesGenre = new HashMap<Integer, String>();
 		imdbId = new HashMap<Integer, Integer>();
 		wikidataId = new HashMap<Integer, Integer>();
 		tags = new HashMap<Integer, String>();
@@ -49,7 +51,9 @@ public class DBParser {
 		br.readLine();
 		while ((ligne=br.readLine()) != null){
 			movies.put(Integer.parseInt(ligne.split(SEPARATOR)[0]), ligne.split(SEPARATOR)[1]);
+			moviesGenre.put(Integer.parseInt(ligne.split(SEPARATOR)[0]), ligne.split(SEPARATOR)[2]);
 			System.out.println(movies.get(Integer.parseInt(ligne.split(SEPARATOR)[0])));
+			System.out.println(moviesGenre.get(Integer.parseInt(ligne.split(SEPARATOR)[0])));
 		}
 		br.close(); 
         
