@@ -11,11 +11,11 @@ public class Rate extends AssociatedUMT{
 		this.rateValue = rateValue;
 	}
 
-	public Rate(int movieId, int userId, float rateValue, Time time) {
+	public Rate(int movieId, int userId, float rateValue){//, Time time) {
 		super.movieId = movieId;
 		super.userId = userId;
 		this.rateValue = rateValue;
-		super.time = time;
+//		super.time = time;
 	}
 	
 }

@@ -15,6 +15,6 @@ public class MetaTag extends AssociatedUMT {
 		super.movieId = movieId;
 		super.userId = userId;
 		this.tagValue = tagValue;
-		super.time = time;
+//		super.time = time;
 	}
 }

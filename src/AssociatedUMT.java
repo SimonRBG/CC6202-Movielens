@@ -1,9 +1,9 @@
-import java.sql.Time;
+//import java.sql.Time;
 
 public abstract class AssociatedUMT {
 	protected int movieId;
 	protected int userId;
-	protected Time time;
+	//protected Time time;
 	
 	public int getMovieId() {
 		return movieId;
@@ -21,12 +21,12 @@ public abstract class AssociatedUMT {
 		this.userId = userId;
 	}
 
-	public Time getTime() {
+/*	public Time getTime() {
 		return time;
 	}
 
 	public void setTime(Time time) {
 		this.time = time;
 	}
-
+*/
 }
