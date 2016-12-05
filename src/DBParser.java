@@ -154,7 +154,7 @@ public class DBParser {
 		// Consume the first line
 		br.readLine();
 		while ((ligne=br.readLine()) != null){
-			ratings.add(new Rate(Integer.parseInt(ligne.split(SEPARATOR)[0]),Integer.parseInt(ligne.split(SEPARATOR)[1]), Float.parseFloat(ligne.split(SEPARATOR)[2]), new Time(Integer.parseInt(ligne.split(SEPARATOR)[3]))));
+			ratings.add(new Rate(Integer.parseInt(ligne.split(SEPARATOR)[0]),Integer.parseInt(ligne.split(SEPARATOR)[1]), Float.parseFloat(ligne.split(SEPARATOR)[2])));
 			System.out.println(ratings.size());
 		}
 		br.close(); 
