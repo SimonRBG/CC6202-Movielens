@@ -75,7 +75,7 @@ public class DBParser {
 	
     public void parseMovies() throws IOException {
         InputStream fr = new FileInputStream(RESOURCES_PATH + MOVIES_FILE_NAME);
-        
+        System.out.println("Parsing movies_file...");
         InputStreamReader ipsr = new InputStreamReader(fr);
 		BufferedReader br = new BufferedReader(ipsr);
 		String ligne;
@@ -84,8 +84,6 @@ public class DBParser {
 		while ((ligne=br.readLine()) != null){
 			movies.put(Integer.parseInt(ligne.split(SEPARATOR)[0]), ligne.split(SEPARATOR)[1]);
 			moviesGenre.put(Integer.parseInt(ligne.split(SEPARATOR)[0]), ligne.split(SEPARATOR)[2]);
-			System.out.println(movies.get(Integer.parseInt(ligne.split(SEPARATOR)[0])));
-			System.out.println(moviesGenre.get(Integer.parseInt(ligne.split(SEPARATOR)[0])));
 		}
 		br.close(); 
         
@@ -93,7 +91,7 @@ public class DBParser {
     
     public void parseLinks() throws IOException {
         InputStream fr = new FileInputStream(RESOURCES_PATH + LINKS_FILE_NAME);
-        
+        System.out.println("Parsing links_file...");
         InputStreamReader ipsr = new InputStreamReader(fr);
 		BufferedReader br = new BufferedReader(ipsr);
 		String ligne;
@@ -102,11 +100,9 @@ public class DBParser {
 		while ((ligne=br.readLine()) != null){
 			if (ligne.split(SEPARATOR).length >= 2) {
 				imdbId.put(Integer.parseInt(ligne.split(SEPARATOR)[0]), Integer.parseInt(ligne.split(SEPARATOR)[1]));
-				System.out.println(imdbId.get(Integer.parseInt(ligne.split(SEPARATOR)[0])));
 			}
 			if (ligne.split(SEPARATOR).length >= 3) {
 				wikidataId.put(Integer.parseInt(ligne.split(SEPARATOR)[0]), Integer.parseInt(ligne.split(SEPARATOR)[2]));
-				System.out.println(wikidataId.get(Integer.parseInt(ligne.split(SEPARATOR)[0])));
 			}
 		}
 		br.close(); 
@@ -114,6 +110,7 @@ public class DBParser {
     }
     
     public void parseTags() throws IOException {
+    	System.out.println("Parsing genome-tags_file...");
         InputStream fr = new FileInputStream(RESOURCES_PATH + TAGS_FILE_NAME);
         
         InputStreamReader ipsr = new InputStreamReader(fr);
@@ -123,14 +120,14 @@ public class DBParser {
 		br.readLine();
 		while ((ligne=br.readLine()) != null){
 			tags.put(Integer.parseInt(ligne.split(SEPARATOR)[0]), ligne.split(SEPARATOR)[1]);
-			//System.out.println(tags.get(Integer.parseInt(ligne.split(SEPARATOR)[0])));
 		}
 		br.close(); 
         
     }
     
     public void parseScores() throws IOException {
-        InputStream fr = new FileInputStream(RESOURCES_PATH + SCORES_FILE_NAME);
+    	System.out.println("Parsing scores_file...");
+    	InputStream fr = new FileInputStream(RESOURCES_PATH + SCORES_FILE_NAME);
         
         InputStreamReader ipsr = new InputStreamReader(fr);
 		BufferedReader br = new BufferedReader(ipsr);
@@ -139,7 +136,6 @@ public class DBParser {
 		br.readLine();
 		while ((ligne=br.readLine()) != null){
 			scores.put(new CoupleMovieTag(Integer.parseInt(ligne.split(SEPARATOR)[0]),Integer.parseInt(ligne.split(SEPARATOR)[1])), Double.parseDouble(ligne.split(SEPARATOR)[2]));
-			System.out.println(scores.size());
 		}
 		br.close(); 
         
@@ -147,7 +143,7 @@ public class DBParser {
     
     public void parseRates() throws IOException {
         InputStream fr = new FileInputStream(RESOURCES_PATH + RATES_FILE_NAME);
-        
+        System.out.println("Parsing rates_file...");
         InputStreamReader ipsr = new InputStreamReader(fr);
 		BufferedReader br = new BufferedReader(ipsr);
 		String ligne;
@@ -155,7 +151,6 @@ public class DBParser {
 		br.readLine();
 		while ((ligne=br.readLine()) != null){
 			ratings.add(new Rate(Integer.parseInt(ligne.split(SEPARATOR)[0]),Integer.parseInt(ligne.split(SEPARATOR)[1]), Float.parseFloat(ligne.split(SEPARATOR)[2])));
-			System.out.println(ratings.size());
 		}
 		br.close(); 
         
@@ -163,6 +158,7 @@ public class DBParser {
     
     public void parseMetaTags() throws IOException {
         InputStream fr = new FileInputStream(RESOURCES_PATH + METATAGS_FILE_NAME);
+        System.out.println("Parsing tags_file...");
         String tTag;
         int cpt=0;
         InputStreamReader ipsr = new InputStreamReader(fr);
@@ -178,26 +174,9 @@ public class DBParser {
 		        cpt++;
 		    }			
 			metaTags.add(new MetaTag(Integer.parseInt(ligne.split(SEPARATOR)[0]),Integer.parseInt(ligne.split(SEPARATOR)[1]), tTag, new Time(Integer.parseInt(ligne.split(SEPARATOR)[ligne.split(SEPARATOR).length-1]))));
-			System.out.println(metaTags.size());
 		}
 		br.close(); 
         
     }
     
-  /*  public static void main(String args[]){
-    	DBParser dbp = new DBParser();
-    	try {
-			//dbp.parseMovies();
-			//dbp.parseLinks();
-			//dbp.parseTags();
-			/** TODO : Optimize because demand more than 1G of bytes
-			//dbp.parseScores(); **/
-    		//dbp.parseRates(); */
-    /*		dbp.parseMetaTags();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
-    } */
 }

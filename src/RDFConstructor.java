@@ -63,6 +63,7 @@ public class RDFConstructor {
 			// TODO : Use URI for tags
 			  model.createResource(mt.getTagValue())
 			  // TODO : Which RDFS ?????
+			  // TODO : Use Movie's id from Wikidata
 			         .addProperty(RDFS.isDefinedBy, String.valueOf(mt.getMovieId()));
 			  model.createResource(mt.getTagValue())
 			  		 .addProperty(RDFS.isDefinedBy, String.valueOf(mt.getUserId()));
