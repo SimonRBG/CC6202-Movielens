@@ -123,7 +123,7 @@ public class DBParser {
 		br.readLine();
 		while ((ligne=br.readLine()) != null){
 			tags.put(Integer.parseInt(ligne.split(SEPARATOR)[0]), ligne.split(SEPARATOR)[1]);
-			System.out.println(tags.get(Integer.parseInt(ligne.split(SEPARATOR)[0])));
+			//System.out.println(tags.get(Integer.parseInt(ligne.split(SEPARATOR)[0])));
 		}
 		br.close(); 
         
