@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,6 +11,8 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.VCARD;
+import org.apache.jena.vocabulary.OWL;
+import org.apache.jena.vocabulary.RDFS;
 
 public class RDFConstructor {
 
@@ -29,7 +32,7 @@ public class RDFConstructor {
 		/** TODO : Optimize because demand more than 1G of bytes
 		//parser.parseScores(); 
 		parser.parseRates();**/ 
-		//parser.parseMetaTags();
+		parser.parseMetaTags();
 	}
 	
 	public Model generateTagsTriples() {
@@ -40,7 +43,7 @@ public class RDFConstructor {
 			int sub = iter.next();
 			String prop = parser.getTags().get(sub);
 			System.out.println(prop);
-			  model.createResource(String.valueOf(sub))
+			  model.createResource(RDFS.getURI() + "/tags/"+String.valueOf(sub))
 			         .addProperty(VCARD.FN, prop);
 		}
 
@@ -53,8 +56,19 @@ public class RDFConstructor {
 	}
 	
 	/** TODO : Using JENA **/
-	public void generateTagsOnMoveieTriples() {
-		return;
+	public Model generateTagsOnMoveieTriples() {
+		Model model = ModelFactory.createDefaultModel();
+
+		for (MetaTag mt : parser.getMetaTags()) {
+			// TODO : Use URI for tags
+			  model.createResource(mt.getTagValue())
+			  // TODO : Which RDFS ?????
+			         .addProperty(RDFS.isDefinedBy, String.valueOf(mt.getMovieId()));
+			  model.createResource(mt.getTagValue())
+			  		 .addProperty(RDFS.isDefinedBy, String.valueOf(mt.getUserId()));
+		}
+
+		 return model;
 	}
 	
 	/** TODO : Using JENA **/
@@ -73,7 +87,9 @@ public class RDFConstructor {
 		{
 		    FileWriter fw = new FileWriter (rdfFile);
 		    
-		    fw.write(this.generateTagsTriples().toString());
+		    this.generateTagsTriples().write(fw, "N-TRIPLES");
+		    
+		    this.generateTagsOnMoveieTriples().write(fw, "N-TRIPLES");
 		 
 		    fw.close();
 		}
