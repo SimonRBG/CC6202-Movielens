@@ -9,7 +9,9 @@ import java.util.Map.Entry;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.sparql.vocabulary.FOAF;
 import org.apache.jena.vocabulary.VCARD;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDFS;
@@ -20,6 +22,10 @@ public class RDFConstructor {
 	
 	private File rdfFile;
 	
+	private Model m;
+	
+	private String link = "REPLACELinkThere#";
+
 	public RDFConstructor() {
 		parser = new DBParser();
 		rdfFile = new File("MovieLens.rdf");
@@ -42,9 +48,8 @@ public class RDFConstructor {
 			// TODO : Use URI for tags
 			int sub = iter.next();
 			String prop = parser.getTags().get(sub);
-			System.out.println(prop);
 			  model.createResource(RDFS.getURI() + "/tags/"+String.valueOf(sub))
-			         .addProperty(VCARD.FN, prop);
+			         .addProperty(FOAF.name, prop);
 		}
 
 		 return model;
@@ -64,9 +69,9 @@ public class RDFConstructor {
 			  model.createResource(mt.getTagValue())
 			  // TODO : Which RDFS ?????
 			  // TODO : Use Movie's id from Wikidata
-			         .addProperty(RDFS.isDefinedBy, String.valueOf(mt.getMovieId()));
+			         .addProperty(m.getProperty(this.link + "MovieId"), String.valueOf(mt.getMovieId()));
 			  model.createResource(mt.getTagValue())
-			  		 .addProperty(RDFS.isDefinedBy, String.valueOf(mt.getUserId()));
+			  		 .addProperty(m.getProperty(this.link + "UserId"), String.valueOf(mt.getUserId()));
 		}
 
 		 return model;
@@ -88,10 +93,14 @@ public class RDFConstructor {
 		{
 		    FileWriter fw = new FileWriter (rdfFile);
 		    
+		    System.out.println("Writing in MovieLens.rdf file...");
+		    
 		    this.generateTagsTriples().write(fw, "N-TRIPLES");
 		    
 		    this.generateTagsOnMoveieTriples().write(fw, "N-TRIPLES");
 		 
+		    System.out.println("Writing in MovieLens.rdf file complete");
+		    
 		    fw.close();
 		}
 		catch (IOException exception)
@@ -100,9 +109,18 @@ public class RDFConstructor {
 		}
 	}
 	
+	public void generateProperties(){
+		 m = ModelFactory.createDefaultModel();
+		 m.createProperty( this.link + "relevance");
+		 m.createProperty( this.link + "TagId");
+		 m.createProperty( this.link + "UserId");
+		 m.createProperty( this.link + "MovieId");
+	}
+	
 	public static void main (String args[]) {
 		RDFConstructor rdfc = new RDFConstructor();
 		try {
+			rdfc.generateProperties();
 			rdfc.generateParsing();
 			rdfc.generateAllRDF();
 		} catch (IOException e) {
