@@ -24,7 +24,7 @@ public class RDFConstructor {
 	
 	private Model m;
 	
-	private String link = "REPLACELinkThere#";
+	private String link = "http://ex.org/";
 
 	public RDFConstructor() {
 		parser = new DBParser();
@@ -32,12 +32,12 @@ public class RDFConstructor {
 	}
 	
 	public void generateParsing() throws IOException {
-		//parse.parseMovies();
+		parser.parseMovies();
 		//parser.parseLinks();
 		parser.parseTags();
 		/** TODO : Optimize because demand more than 1G of bytes
-		//parser.parseScores(); 
-		parser.parseRates();**/ 
+		parser.parseRates(); **/
+		parser.parseScores(); 
 		parser.parseMetaTags();
 	}
 	
@@ -48,7 +48,7 @@ public class RDFConstructor {
 			// TODO : Use URI for tags
 			int sub = iter.next();
 			String prop = parser.getTags().get(sub);
-			  model.createResource(RDFS.getURI() + "/tags/"+String.valueOf(sub))
+			model.createResource(this.link + "/tags/"+String.valueOf(sub))
 			         .addProperty(FOAF.name, prop);
 		}
 
@@ -56,8 +56,14 @@ public class RDFConstructor {
 	}
 	
 	/** TODO : Using JENA **/
-	public void generateScoreTriples() {
-		return;
+	public Model generateScoreTriples() {
+		Model model = ModelFactory.createDefaultModel();
+		for (CoupleMovieTag cmt : parser.getScores().keySet()) {
+			model.createResource(this.link + "/tags/"+cmt.getIdTag())
+		       .addLiteral(m.getProperty(this.link + "Movie"), cmt.getIdMovie())
+		       .addLiteral(m.getProperty(this.link + "Relevance"), parser.getScores().get(cmt));
+		}
+		return model;
 	}
 	
 	/** TODO : Using JENA **/
@@ -66,15 +72,13 @@ public class RDFConstructor {
 
 		for (MetaTag mt : parser.getMetaTags()) {
 			// TODO : Use URI for tags
-			  model.createResource(mt.getTagValue())
-			  // TODO : Which RDFS ?????
+			model.createResource(mt.getTagValue())
 			  // TODO : Use Movie's id from Wikidata
-			         .addProperty(m.getProperty(this.link + "MovieId"), String.valueOf(mt.getMovieId()));
-			  model.createResource(mt.getTagValue())
-			  		 .addProperty(m.getProperty(this.link + "UserId"), String.valueOf(mt.getUserId()));
+			       .addLiteral(m.getProperty(this.link + "Movie"), mt.getMovieId())
+			       .addLiteral(m.getProperty(this.link + "User"), mt.getUserId());			  		 
 		}
 
-		 return model;
+		return model;
 	}
 	
 	/** TODO : Using JENA **/
@@ -98,6 +102,8 @@ public class RDFConstructor {
 		    this.generateTagsTriples().write(fw, "N-TRIPLES");
 		    
 		    this.generateTagsOnMoveieTriples().write(fw, "N-TRIPLES");
+		    
+		    this.generateScoreTriples().write(fw, "N-TRIPLES");
 		 
 		    System.out.println("Writing in MovieLens.rdf file complete");
 		    
@@ -111,10 +117,10 @@ public class RDFConstructor {
 	
 	public void generateProperties(){
 		 m = ModelFactory.createDefaultModel();
-		 m.createProperty( this.link + "relevance");
-		 m.createProperty( this.link + "TagId");
-		 m.createProperty( this.link + "UserId");
-		 m.createProperty( this.link + "MovieId");
+		 m.createProperty( this.link + "Relevance");
+		 m.createProperty( this.link + "Tag");
+		 m.createProperty( this.link + "User");
+		 m.createProperty( this.link + "Movie");
 	}
 	
 	public static void main (String args[]) {
