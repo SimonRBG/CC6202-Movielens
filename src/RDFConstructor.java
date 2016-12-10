@@ -25,7 +25,9 @@ public class RDFConstructor {
 	private Model m;
 	
 	private String link = "http://ex.org/";
-
+	private String linkOmdb = "https://www.omdb.org/";
+	private String linkMovieLens ="https://movielens.org/";
+	
 	public RDFConstructor() {
 		parser = new DBParser();
 		rdfFile = new File("MovieLens.rdf");
@@ -33,7 +35,7 @@ public class RDFConstructor {
 	
 	public void generateParsing() throws IOException {
 		parser.parseMovies();
-		//parser.parseLinks();
+		parser.parseLinks();
 		parser.parseTags();
 		/** TODO : Optimize because demand more than 1G of bytes
 		parser.parseRates(); **/
@@ -59,23 +61,39 @@ public class RDFConstructor {
 	public Model generateScoreTriples() {
 		Model model = ModelFactory.createDefaultModel();
 		for (CoupleMovieTag cmt : parser.getScores().keySet()) {
-			model.createResource(this.link + "/tags/"+cmt.getIdTag())
-		       .addLiteral(m.getProperty(this.link + "Movie"), cmt.getIdMovie())
-		       .addLiteral(m.getProperty(this.link + "Relevance"), parser.getScores().get(cmt));
+			String uri;
+			// Directly adding the id movie from wikidata (omdb) if it is possible
+			uri = this.linkMovieLens+ "movies/" + cmt.getIdMovie();
+		    	model.createResource(this.link + "/tags/"+cmt.getIdTag())
+		    		.addProperty(m.getProperty(this.linkMovieLens + "movie"), uri)
+		    		.addLiteral(m.getProperty(this.link + "Relevance"), parser.getScores().get(cmt));		    	
+		}
+		return model;
+	}
+	
+	public Model generateMovies() {
+		Model model = ModelFactory.createDefaultModel();
+		for (int key : parser.getMovies().keySet()) {
+			if (parser.getWikidataId().get(key) != null) {
+				model.createResource(this.linkMovieLens + "movies/"+ key)
+				.addProperty(FOAF.name, parser.getMovies().get(key))
+				.addProperty(m.getProperty(this.linkOmdb+ "movie"), this.linkOmdb + "movie/"+ parser.getWikidataId().get(key));
+			} else {
+				model.createResource(this.linkMovieLens + "/movies/"+ key)
+				.addProperty(FOAF.name, parser.getMovies().get(key));
+			}
 		}
 		return model;
 	}
 	
 	/** TODO : Using JENA **/
-	public Model generateTagsOnMoveieTriples() {
+	public Model generateTagsOnMovieTriples() {
 		Model model = ModelFactory.createDefaultModel();
 
 		for (MetaTag mt : parser.getMetaTags()) {
 			// TODO : Use URI for tags
-			model.createResource(mt.getTagValue())
-			  // TODO : Use Movie's id from Wikidata
-			       .addLiteral(m.getProperty(this.link + "Movie"), mt.getMovieId())
-			       .addLiteral(m.getProperty(this.link + "User"), mt.getUserId());			  		 
+		    	model.createResource(mt.getTagValue())
+				       .addLiteral(m.getProperty(this.link + "User"), mt.getUserId());					  		 
 		}
 
 		return model;
@@ -86,9 +104,9 @@ public class RDFConstructor {
 		return;
 	}
 	
-	/** TODO : Using JENA **/
-	public void generateWikiDataTriples() {
-		return;
+	/** TODO : Using JENA, obtaining additional data (name, actors, etc) **/
+	public void obtainWikiDataTriples() {
+		
 	}
 	
 	/** TODO : Call all the jena functions **/
@@ -99,9 +117,11 @@ public class RDFConstructor {
 		    
 		    System.out.println("Writing in MovieLens.rdf file...");
 		    
+		    this.generateMovies().write(fw, "N-TRIPLES");
+		    
 		    this.generateTagsTriples().write(fw, "N-TRIPLES");
 		    
-		    this.generateTagsOnMoveieTriples().write(fw, "N-TRIPLES");
+		    this.generateTagsOnMovieTriples().write(fw, "N-TRIPLES");
 		    
 		    this.generateScoreTriples().write(fw, "N-TRIPLES");
 		 
@@ -117,10 +137,12 @@ public class RDFConstructor {
 	
 	public void generateProperties(){
 		 m = ModelFactory.createDefaultModel();
-		 m.createProperty( this.link + "Relevance");
-		 m.createProperty( this.link + "Tag");
-		 m.createProperty( this.link + "User");
-		 m.createProperty( this.link + "Movie");
+		 m.createProperty(this.link + "Relevance");
+		 m.createProperty(this.link + "Tag");
+		 m.createProperty(this.link + "User");
+		 m.createProperty(this.link + "Movie");
+		 m.createProperty(this.linkOmdb + "movie");
+		 m.createProperty(this.linkMovieLens + "movie");
 	}
 	
 	public static void main (String args[]) {
