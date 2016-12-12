@@ -1,5 +1,3 @@
-import java.sql.Time;
-
 public class Rate extends AssociatedUMT{
 	private float rateValue;
 	

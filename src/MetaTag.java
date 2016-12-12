@@ -1,4 +1,3 @@
-import java.sql.Time;
 
 public class MetaTag extends AssociatedUMT {
 	private String tagValue;
@@ -11,10 +10,9 @@ public class MetaTag extends AssociatedUMT {
 		this.tagValue = tagValue;
 	}
 
-	public MetaTag(int movieId, int userId, String tagValue, Time time) {
+	public MetaTag(int movieId, int userId, String tagValue) {
 		super.movieId = movieId;
 		super.userId = userId;
-		this.tagValue = tagValue;
-//		super.time = time;
+		this.tagValue = tagValue;		
 	}
 }
