@@ -79,7 +79,7 @@ public class DBParser {
         InputStreamReader ipsr = new InputStreamReader(fr);
 		BufferedReader br = new BufferedReader(ipsr);
 		String ligne;
-		// Consume the first line
+		// Consume the unuseful first line
 		br.readLine();
 		while ((ligne=br.readLine()) != null){
 			movies.put(Integer.parseInt(ligne.split(SEPARATOR)[0]), ligne.split(SEPARATOR)[1]);
@@ -95,7 +95,7 @@ public class DBParser {
         InputStreamReader ipsr = new InputStreamReader(fr);
 		BufferedReader br = new BufferedReader(ipsr);
 		String ligne;
-		// Consume the first line
+		// Consume the unuseful first line
 		br.readLine();
 		while ((ligne=br.readLine()) != null){
 			if (ligne.split(SEPARATOR).length >= 2) {
@@ -105,8 +105,7 @@ public class DBParser {
 				wikidataId.put(Integer.parseInt(ligne.split(SEPARATOR)[0]), Integer.parseInt(ligne.split(SEPARATOR)[2]));
 			}
 		}
-		br.close(); 
-        
+		br.close();         
     }
     
     public void parseTags() throws IOException {
@@ -116,10 +115,10 @@ public class DBParser {
         InputStreamReader ipsr = new InputStreamReader(fr);
 		BufferedReader br = new BufferedReader(ipsr);
 		String ligne;
-		// Consume the first line
+		// Consume the unuseful first line
 		br.readLine();
 		while ((ligne=br.readLine()) != null){
-			tags.put(Integer.parseInt(ligne.split(SEPARATOR)[0]), ligne.split(SEPARATOR)[1]);
+			tags.put(Integer.parseInt(ligne.split(SEPARATOR)[0]), ligne.split(SEPARATOR)[1]);						
 		}
 		br.close(); 
         
@@ -150,7 +149,7 @@ public class DBParser {
 		// Consume the first line
 		br.readLine();
 		while ((ligne=br.readLine()) != null){
-			ratings.add(new Rate(Integer.parseInt(ligne.split(SEPARATOR)[0]),Integer.parseInt(ligne.split(SEPARATOR)[1]), Float.parseFloat(ligne.split(SEPARATOR)[2])));
+			ratings.add(new Rate(Integer.parseInt(ligne.split(SEPARATOR)[1]),Integer.parseInt(ligne.split(SEPARATOR)[0]), Float.parseFloat(ligne.split(SEPARATOR)[2])));
 		}
 		br.close(); 
         
@@ -169,11 +168,15 @@ public class DBParser {
 		while ((ligne=br.readLine()) != null){
 			tTag="";
 			cpt = 2;
+			//this while is for avoid tags with comas??
 			while (cpt < ligne.split(SEPARATOR).length){
 		        tTag += ligne.split(SEPARATOR)[cpt];
 		        cpt++;
 		    }			
-			metaTags.add(new MetaTag(Integer.parseInt(ligne.split(SEPARATOR)[0]),Integer.parseInt(ligne.split(SEPARATOR)[1]), tTag, new Time(Integer.parseInt(ligne.split(SEPARATOR)[ligne.split(SEPARATOR).length-1]))));
+			metaTags.add(new MetaTag(Integer.parseInt(
+					ligne.split(SEPARATOR)[0]),
+					Integer.parseInt(ligne.split(SEPARATOR)[1]),
+					tTag));
 		}
 		br.close(); 
         

@@ -18,6 +18,7 @@ public class CoupleMovieTag {
 	public void setIdTag(int idTag) {
 		this.idTag = idTag;
 	}
+	
 
 	public CoupleMovieTag(int idMovie, int idTag){
 		this.idMovie = idMovie;

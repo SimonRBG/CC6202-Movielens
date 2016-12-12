@@ -39,8 +39,8 @@ public class RDFConstructor {
 		parser.parseMovies();
 		parser.parseLinks();
 		parser.parseTags();
-		/** TODO : Optimize because demand more than 1G of bytes
-		parser.parseRates(); **/
+		// TODO : Optimize because demand more than 1G of bytes
+		parser.parseRates();
 		parser.parseScores(); 
 		parser.parseMetaTags();
 	}
@@ -52,7 +52,7 @@ public class RDFConstructor {
 			// TODO : Use URI for tags
 			int sub = iter.next();
 			String prop = parser.getTags().get(sub);
-			model.createResource(this.link + "/tags/"+String.valueOf(sub))
+			model.createResource(this.link + "/Tags/"+String.valueOf(sub))
 			         .addProperty(FOAF.name, prop);
 		}
 
@@ -95,7 +95,8 @@ public class RDFConstructor {
 		for (MetaTag mt : parser.getMetaTags()) {
 			// TODO : Use URI for tags
 		    	model.createResource(mt.getTagValue())
-				       .addLiteral(m.getProperty(this.link + "User"), mt.getUserId());					  		 
+				       .addLiteral(m.getProperty(this.link + "User"), mt.getUserId())
+				       .addLiteral(m.getProperty(this.link + "Movie"), mt.getMovieId());					  		 
 		}
 
 		return model;
