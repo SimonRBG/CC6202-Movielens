@@ -27,6 +27,8 @@ public class RDFConstructor {
 	private String link = "http://ex.org/";
 	private String linkOmdb = "https://www.omdb.org/";
 	private String linkMovieLens ="https://movielens.org/";
+	private String linkImdb ="www.imdb.com/";
+
 	
 	public RDFConstructor() {
 		parser = new DBParser();
@@ -74,10 +76,10 @@ public class RDFConstructor {
 	public Model generateMovies() {
 		Model model = ModelFactory.createDefaultModel();
 		for (int key : parser.getMovies().keySet()) {
-			if (parser.getWikidataId().get(key) != null) {
+			if (parser.getImdbId().get(key) != null) {
 				model.createResource(this.linkMovieLens + "movies/"+ key)
 				.addProperty(FOAF.name, parser.getMovies().get(key))
-				.addProperty(m.getProperty(this.linkOmdb+ "movie"), this.linkOmdb + "movie/"+ parser.getWikidataId().get(key));
+				.addProperty(m.getProperty(this.linkImdb+ "movie"), this.linkImdb + "title/tt"+ parser.getImdbId().get(key));
 			} else {
 				model.createResource(this.linkMovieLens + "/movies/"+ key)
 				.addProperty(FOAF.name, parser.getMovies().get(key));
@@ -143,6 +145,7 @@ public class RDFConstructor {
 		 m.createProperty(this.link + "Movie");
 		 m.createProperty(this.linkOmdb + "movie");
 		 m.createProperty(this.linkMovieLens + "movie");
+		 m.createProperty(this.linkImdb + "movie");
 	}
 	
 	public static void main (String args[]) {
