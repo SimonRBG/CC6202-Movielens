@@ -10,7 +10,11 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-
+/**
+ * Class that parses all csv files that constitute the MovieLens database.
+ * @author Simon
+ *
+ */
 public class DBParser {
 	
 	private final static String RESOURCES_PATH = "./ml-20m/";

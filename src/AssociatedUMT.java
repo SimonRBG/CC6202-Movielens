@@ -1,5 +1,8 @@
-//import java.sql.Time;
-
+/**
+ * Class to avoid code repetition in Rate an MetaTag
+ * @author Simon
+ *
+ */
 public abstract class AssociatedUMT {
 	protected int movieId;
 	protected int userId;
@@ -20,13 +23,4 @@ public abstract class AssociatedUMT {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-
-/*	public Time getTime() {
-		return time;
-	}
-
-	public void setTime(Time time) {
-		this.time = time;
-	}
-*/
 }

@@ -1,4 +1,8 @@
-
+/**
+ * Structure to make easy the storage of tags relevance on movies.
+ * @author Simon
+ *
+ */
 public class CoupleMovieTag {
 	private int idMovie;
 	private int idTag;

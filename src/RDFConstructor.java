@@ -15,7 +15,14 @@ import org.apache.jena.sparql.vocabulary.FOAF;
 import org.apache.jena.vocabulary.VCARD;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDFS;
-
+/** 
+ * That class calls the parser.
+ * After the parsing, it calls function to construct each triples.
+ * Each triples feed a model. 
+ * All models are obtained to be written into a file.
+ * @author Simon
+ *
+ */
 public class RDFConstructor {
 
 	private DBParser parser;
@@ -39,7 +46,6 @@ public class RDFConstructor {
 		parser.parseMovies();
 		parser.parseLinks();
 		parser.parseTags();
-		// TODO : Optimize because demand more than 1G of bytes
 		parser.parseRates();
 		parser.parseScores(); 
 		parser.parseMetaTags();
@@ -49,7 +55,6 @@ public class RDFConstructor {
 		Model model = ModelFactory.createDefaultModel();
 
 		for (Iterator<Integer> iter = parser.getTags().keySet().iterator(); iter.hasNext();) {
-			// TODO : Use URI for tags
 			int sub = iter.next();
 			String prop = parser.getTags().get(sub);
 			model.createResource(this.link + "/Tags/"+String.valueOf(sub))
@@ -59,7 +64,6 @@ public class RDFConstructor {
 		 return model;
 	}
 	
-	/** TODO : Using JENA **/
 	public Model generateScoreTriples() {
 		Model model = ModelFactory.createDefaultModel();
 		for (CoupleMovieTag cmt : parser.getScores().keySet()) {
@@ -89,13 +93,11 @@ public class RDFConstructor {
 		return model;
 	}
 	
-	/** TODO : Using JENA **/
 	public Model generateTagsOnMovieTriples() {
 		Model model = ModelFactory.createDefaultModel();
 		long id = 0;
 		for (MetaTag mt : parser.getMetaTags()) {
 			id++;
-			// TODO : Use URI for tags
 		    	model.createResource(this.link + "MetaTag/" + id)
 		    		.addLiteral(FOAF.name, mt.getTagValue())
 				    .addLiteral(m.getProperty(this.link + "User"), mt.getUserId())
@@ -105,11 +107,11 @@ public class RDFConstructor {
 		return model;
 	}
 	
-	/** TODO : Using JENA **/
 	public void generateRateTriples() {
 		Model model = ModelFactory.createDefaultModel();
 		int key = 0;
 		for( Rate r : parser.getRatings()){
+			key++;
 			model.createResource(this.link + "/rating/" + key) //no hay un id para rating
 				.addLiteral(m.getProperty(this.link + "User"), r.getUserId())
 				.addLiteral( m.getProperty(this.link + "Movie"), r.getMovieId())
@@ -118,12 +120,6 @@ public class RDFConstructor {
 		return;
 	}
 	
-	/** TODO : Using JENA, obtaining additional data (name, actors, etc) **/
-	public void obtainWikiDataTriples() {
-		
-	}
-	
-	/** TODO : Call all the jena functions **/
 	public void generateAllRDF() {
 		try
 		{
