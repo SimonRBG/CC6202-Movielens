@@ -107,17 +107,17 @@ public class RDFConstructor {
 		return model;
 	}
 	
-	public void generateRateTriples() {
+	public Model generateRateTriples() {
 		Model model = ModelFactory.createDefaultModel();
 		int key = 0;
 		for( Rate r : parser.getRatings()){
 			key++;
-			model.createResource(this.link + "/rating/" + key) //no hay un id para rating
+			model.createResource(this.link + "Rating/" + key) //no hay un id para rating
 				.addLiteral(m.getProperty(this.link + "User"), r.getUserId())
 				.addLiteral( m.getProperty(this.link + "Movie"), r.getMovieId())
 				.addLiteral(m.getProperty(this.link + "Rate"), r.getRateValue());
 		}
-		return;
+		return model;
 	}
 	
 	public void generateAllRDF() {
@@ -125,17 +125,24 @@ public class RDFConstructor {
 		{
 		    FileWriter fw = new FileWriter (rdfFile);
 		    
-		    System.out.println("Writing in MovieLens.rdf file...");
+		    System.out.println("Writing in MovieLens.ttl file...");
 		    
+		    System.out.println("Writing Movies triples");
 		    this.generateMovies().write(fw, "N-TRIPLES");
 		    
+		    System.out.println("Writing Tags triples");
 		    this.generateTagsTriples().write(fw, "N-TRIPLES");
 		    
+		    System.out.println("Writing MetaTags triples");
 		    this.generateTagsOnMovieTriples().write(fw, "N-TRIPLES");
-		    
+		    		  
+		    System.out.println("Writing Scores triples");
 		    this.generateScoreTriples().write(fw, "N-TRIPLES");
+		    
+		    System.out.println("Writing Rates triples");
+		    this.generateRateTriples().write(fw, "N-TRIPLES");
 		 
-		    System.out.println("Writing in MovieLens.rdf file complete");
+		    System.out.println("Writing in MovieLens.ttl file complete");
 		    
 		    fw.close();
 		}
