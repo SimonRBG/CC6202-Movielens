@@ -81,7 +81,7 @@ public class RDFConstructor {
 				.addProperty(FOAF.name, parser.getMovies().get(key))
 				.addProperty(m.getProperty(this.linkImdb+ "movie"), this.linkImdb + "title/tt"+ parser.getImdbId().get(key));
 			} else {
-				model.createResource(this.linkMovieLens + "/movies/"+ key)
+				model.createResource(this.linkMovieLens + "movies/"+ key)
 				.addProperty(FOAF.name, parser.getMovies().get(key));
 			}
 		}
@@ -91,12 +91,14 @@ public class RDFConstructor {
 	/** TODO : Using JENA **/
 	public Model generateTagsOnMovieTriples() {
 		Model model = ModelFactory.createDefaultModel();
-
+		long id = 0;
 		for (MetaTag mt : parser.getMetaTags()) {
+			id++;
 			// TODO : Use URI for tags
-		    	model.createResource(mt.getTagValue())
-				       .addLiteral(m.getProperty(this.link + "User"), mt.getUserId())
-				       .addLiteral(m.getProperty(this.link + "Movie"), mt.getMovieId());					  		 
+		    	model.createResource(this.link + "MetaTag/" + id)
+		    		.addLiteral(FOAF.name, mt.getTagValue())
+				    .addLiteral(m.getProperty(this.link + "User"), mt.getUserId())
+				    .addLiteral(m.getProperty(this.link + "Movie"), mt.getMovieId());					  		 
 		}
 
 		return model;
@@ -142,6 +144,7 @@ public class RDFConstructor {
 		 m = ModelFactory.createDefaultModel();
 		 m.createProperty(this.link + "Relevance");
 		 m.createProperty(this.link + "Tag");
+		 m.createProperty(this.link + "MetaTag");
 		 m.createProperty(this.link + "User");
 		 m.createProperty(this.link + "Movie");
 		 m.createProperty(this.linkOmdb + "movie");
