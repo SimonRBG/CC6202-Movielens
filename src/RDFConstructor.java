@@ -32,7 +32,7 @@ public class RDFConstructor {
 	
 	public RDFConstructor() {
 		parser = new DBParser();
-		rdfFile = new File("MovieLens.rdf");
+		rdfFile = new File("MovieLens.ttl");
 	}
 	
 	public void generateParsing() throws IOException {
