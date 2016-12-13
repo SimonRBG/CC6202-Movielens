@@ -66,7 +66,7 @@ public class RDFConstructor {
 			String uri;
 			// Directly adding the id movie from wikidata (omdb) if it is possible
 			uri = this.linkMovieLens+ "movies/" + cmt.getIdMovie();
-		    	model.createResource(this.link + "/tags/"+cmt.getIdTag())
+		    	model.createResource(this.link + "Tag/"+cmt.getIdTag())
 		    		.addProperty(m.getProperty(this.linkMovieLens + "movie"), uri)
 		    		.addLiteral(m.getProperty(this.link + "Relevance"), parser.getScores().get(cmt));		    	
 		}
