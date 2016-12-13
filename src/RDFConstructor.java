@@ -78,6 +78,7 @@ public class RDFConstructor {
 				model.createResource(this.linkMovieLens + "movies/"+ key)
 				.addProperty(FOAF.name, parser.getMovies().get(key))
 				.addProperty(m.getProperty(this.linkOmdb+ "movie"), this.linkOmdb + "movie/"+ parser.getWikidataId().get(key));
+				// this property could be named with main link (ex.org/...), instead of linkOmbd
 			} else {
 				model.createResource(this.linkMovieLens + "/movies/"+ key)
 				.addProperty(FOAF.name, parser.getMovies().get(key));
@@ -102,6 +103,14 @@ public class RDFConstructor {
 	
 	/** TODO : Using JENA **/
 	public void generateRateTriples() {
+		Model model = ModelFactory.createDefaultModel();
+		int key = 0;
+		for( Rate r : parser.getRatings()){
+			model.createResource(this.link + "/rating/" + key) //no hay un id para rating
+				.addLiteral(m.getProperty(this.link + "User"), r.getUserId())
+				.addLiteral( m.getProperty(this.link + "Movie"), r.getMovieId())
+				.addLiteral(m.getProperty(this.link + "Rate"), r.getRateValue());
+		}
 		return;
 	}
 	
@@ -142,6 +151,7 @@ public class RDFConstructor {
 		 m.createProperty(this.link + "Tag");
 		 m.createProperty(this.link + "User");
 		 m.createProperty(this.link + "Movie");
+		 m.createProperty(this.link + "Rate");
 		 m.createProperty(this.linkOmdb + "movie");
 		 m.createProperty(this.linkMovieLens + "movie");
 	}
