@@ -1,0 +1,76 @@
+1.- Calcular el rating final de cada Movie, y ordenar movies en orden decreciente de puntaje
+
+Select sum(?score) ?movie 
+from URI:DATA
+where{
+	?movie a ex:Movie .
+	?rating a ex:rating ; ex:movie ?movie ; ex:Relevance ?score .
+}
+Group By ?movie
+Order by desc
+
+
+2.- Calcular rating final de cada Movie, según Tag de usuario, y ordenar las movies por tag en orden de mejor a peor
+
+Select sum(?score) ?movie ?tag
+from URI:DATA
+where{
+	?movie a ex:Movie .
+	?rating a ex:Rating ; ex:movie ?movie ; ex:Relevance ?score .
+	?tag a ex:Tag ; ex:Movie ?movie .
+}
+Group By ?tag
+Order By Desc
+
+3.- Encontrar las top 10 movies con más ratings (más votadas)
+
+Select ?movie count(?rating) as ?numberOfRatings
+from URI:DATA
+where{
+	?movie a ex:Movie .
+	?rating a ex:Rating ; ex:movie ?movie .
+}
+Group By ?movie
+Orden By count(?rating)
+
+4.- Encontrar relevancia (peso efectivo) del rating, según la cantidad de evaluaciones por usuario de cada movie
+
+select ?movie (1 / ?numberOfRatings) as ?peso
+from{
+Select ?movie count(?rating) as ?numberOfRatings
+from URI:DATA
+where{
+	?movie a ex:Movie .
+	?rating a ex:Rating ; ex:movie ?movie .
+}
+Group By ?movie
+Orden By count(?rating)
+}
+Order By Desc
+
+5.- Encontrar usuarios que se parecen por sus ratings (han votado 3 veces igual)
+
+select ?user1 ?user2
+from{
+select ?user1 ?user2 count(?user1||?user2) as ?count
+from URI:DATA
+where{
+	?rating a ex:Rating ; ex:movie ?movie ; ex:user ?user1 .
+	?rating a ex:Rating ; ex:movie ?movie ; ex:user ?user2 .
+	FILTER( ?user1 != ?user2)
+}
+group by ?user1 ?user2
+}
+where{
+	Filter(?count >= 3)
+}
+
+Query with services:
+
+try that for sparql queries, that include imdb data.
+Select *
+from <http://ex.org>
+Where {
+	SERVICE <http://data.linkedmdb.org/sparql>
+	{ Select (COUNT(?s) as ?c ) where ....}
+}

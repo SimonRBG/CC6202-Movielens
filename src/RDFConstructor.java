@@ -27,10 +27,12 @@ public class RDFConstructor {
 	private String link = "http://ex.org/";
 	private String linkOmdb = "https://www.omdb.org/";
 	private String linkMovieLens ="https://movielens.org/";
+	private String linkImdb ="www.imdb.com/";
+
 	
 	public RDFConstructor() {
 		parser = new DBParser();
-		rdfFile = new File("MovieLens.rdf");
+		rdfFile = new File("MovieLens.ttl");
 	}
 	
 	public void generateParsing() throws IOException {
@@ -64,7 +66,7 @@ public class RDFConstructor {
 			String uri;
 			// Directly adding the id movie from wikidata (omdb) if it is possible
 			uri = this.linkMovieLens+ "movies/" + cmt.getIdMovie();
-		    	model.createResource(this.link + "/tags/"+cmt.getIdTag())
+		    	model.createResource(this.link + "Tag/"+cmt.getIdTag())
 		    		.addProperty(m.getProperty(this.linkMovieLens + "movie"), uri)
 		    		.addLiteral(m.getProperty(this.link + "Relevance"), parser.getScores().get(cmt));		    	
 		}
@@ -74,13 +76,13 @@ public class RDFConstructor {
 	public Model generateMovies() {
 		Model model = ModelFactory.createDefaultModel();
 		for (int key : parser.getMovies().keySet()) {
-			if (parser.getWikidataId().get(key) != null) {
+			if (parser.getImdbId().get(key) != null) {
 				model.createResource(this.linkMovieLens + "movies/"+ key)
 				.addProperty(FOAF.name, parser.getMovies().get(key))
-				.addProperty(m.getProperty(this.linkOmdb+ "movie"), this.linkOmdb + "movie/"+ parser.getWikidataId().get(key));
-				// this property could be named with main link (ex.org/...), instead of linkOmbd
+				.addProperty(m.getProperty(this.linkImdb+ "movie"), this.linkImdb + "title/tt"+ parser.getImdbId().get(key));
+
 			} else {
-				model.createResource(this.linkMovieLens + "/movies/"+ key)
+				model.createResource(this.linkMovieLens + "movies/"+ key)
 				.addProperty(FOAF.name, parser.getMovies().get(key));
 			}
 		}
@@ -90,12 +92,14 @@ public class RDFConstructor {
 	/** TODO : Using JENA **/
 	public Model generateTagsOnMovieTriples() {
 		Model model = ModelFactory.createDefaultModel();
-
+		long id = 0;
 		for (MetaTag mt : parser.getMetaTags()) {
+			id++;
 			// TODO : Use URI for tags
-		    	model.createResource(mt.getTagValue())
-				       .addLiteral(m.getProperty(this.link + "User"), mt.getUserId())
-				       .addLiteral(m.getProperty(this.link + "Movie"), mt.getMovieId());					  		 
+		    	model.createResource(this.link + "MetaTag/" + id)
+		    		.addLiteral(FOAF.name, mt.getTagValue())
+				    .addLiteral(m.getProperty(this.link + "User"), mt.getUserId())
+				    .addLiteral(m.getProperty(this.link + "Movie"), mt.getMovieId());					  		 
 		}
 
 		return model;
@@ -149,11 +153,13 @@ public class RDFConstructor {
 		 m = ModelFactory.createDefaultModel();
 		 m.createProperty(this.link + "Relevance");
 		 m.createProperty(this.link + "Tag");
+		 m.createProperty(this.link + "MetaTag");
 		 m.createProperty(this.link + "User");
 		 m.createProperty(this.link + "Movie");
 		 m.createProperty(this.link + "Rate");
 		 m.createProperty(this.linkOmdb + "movie");
 		 m.createProperty(this.linkMovieLens + "movie");
+		 m.createProperty(this.linkImdb + "movie");
 	}
 	
 	public static void main (String args[]) {
