@@ -169,7 +169,7 @@ public class DBParser {
 			tTag="";
 			cpt = 2;
 			//this while is for avoid tags with comas??
-			while (cpt < ligne.split(SEPARATOR).length){
+			while (cpt < ligne.split(SEPARATOR).length-1){
 		        tTag += ligne.split(SEPARATOR)[cpt];
 		        cpt++;
 		    }			
