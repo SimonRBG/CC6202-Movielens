@@ -57,7 +57,7 @@ public class RDFConstructor {
 		for (Iterator<Integer> iter = parser.getTags().keySet().iterator(); iter.hasNext();) {
 			int sub = iter.next();
 			String prop = parser.getTags().get(sub);
-			model.createResource(this.link + "/Tag/"+String.valueOf(sub))
+			model.createResource(this.link + "Tag/"+String.valueOf(sub))
 			         .addProperty(FOAF.name, prop);
 		}
 
