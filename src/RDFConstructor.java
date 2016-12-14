@@ -100,8 +100,8 @@ public class RDFConstructor {
 			id++;
 		    	model.createResource(this.link + "MetaTag/" + id)
 		    		.addLiteral(FOAF.name, mt.getTagValue())
-				    .addLiteral(m.getProperty(this.link + "User"), mt.getUserId())
-				    .addLiteral(m.getProperty(this.link + "Movie"), mt.getMovieId());					  		 
+				    .addLiteral(m.getProperty(this.link + "User"),  mt.getUserId())
+				    .addLiteral(m.getProperty(this.link + "Movie"), m.getResource(this.linkMovieLens + "movies/"+ mt.getMovieId()));					  		 
 		}
 
 		return model;
@@ -114,7 +114,7 @@ public class RDFConstructor {
 			key++;
 			model.createResource(this.link + "Rating/" + key) //no hay un id para rating
 				.addLiteral(m.getProperty(this.link + "User"), r.getUserId())
-				.addLiteral( m.getProperty(this.link + "Movie"), r.getMovieId())
+				.addLiteral( m.getProperty(this.link + "Movie"), m.getResource(this.linkMovieLens + "movies/"+ r.getMovieId()))
 				.addLiteral(m.getProperty(this.link + "Rate"), r.getRateValue());
 		}
 		return model;
